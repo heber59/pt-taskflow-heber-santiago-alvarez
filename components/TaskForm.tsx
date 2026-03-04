@@ -46,7 +46,7 @@ export function TaskForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      await addTask(values.todo);
+      addTask(values.todo);
       form.reset();
       setOpen(false); // Close modal on success
     } finally {
@@ -94,11 +94,7 @@ export function TaskForm() {
             />
             <div className="flex justify-end pt-4">
               <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto px-8">
-                {isSubmitting ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  'Ignite Star'
-                )}
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Ignite Star'}
               </Button>
             </div>
           </form>
