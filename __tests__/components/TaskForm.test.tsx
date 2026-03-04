@@ -1,7 +1,8 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { TaskForm } from '@/components/TaskForm';
+import { TaskForm } from '@components/TaskForm';
 import { TaskProvider } from '@/context/TaskContext';
 import React from 'react';
+import '@testing-library/jest-dom';
 
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
@@ -30,14 +31,14 @@ describe('TaskForm', () => {
 
   it('should render form inputs', () => {
     renderWithProvider(<TaskForm />);
-    
+
     expect(screen.getByPlaceholderText('Add a new task...')).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   it('should show error when input is empty', async () => {
     renderWithProvider(<TaskForm />);
-    
+
     const button = screen.getByRole('button');
     fireEvent.click(button);
 
@@ -48,7 +49,7 @@ describe('TaskForm', () => {
 
   it('should add task on submit', async () => {
     renderWithProvider(<TaskForm />);
-    
+
     const input = screen.getByPlaceholderText('Add a new task...');
     const button = screen.getByRole('button');
 
@@ -77,7 +78,7 @@ describe('TaskForm', () => {
     });
 
     renderWithProvider(<TaskForm />);
-    
+
     const input = screen.getByPlaceholderText('Add a new task...') as HTMLInputElement;
     const button = screen.getByRole('button');
 

@@ -2,6 +2,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { TaskProvider } from '@/context/TaskContext';
 import { useTasks } from '@/hooks/useTasks';
 import React from 'react';
+import { FilterType } from '@/types/FilterType';
 
 // Mock fetch
 const mockFetch = jest.fn();
@@ -106,10 +107,10 @@ describe('useTasks', () => {
     const { result } = renderHook(() => useTasks(), { wrapper });
 
     act(() => {
-      result.current.setFilter('completed');
+      result.current.setFilter(FilterType.COMPLETED);
     });
 
-    expect(result.current.filter).toBe('completed');
+    expect(result.current.filter).toBe(FilterType.COMPLETED);
   });
 
   it('should clear error', async () => {

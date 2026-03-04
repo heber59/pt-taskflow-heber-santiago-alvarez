@@ -1,53 +1,80 @@
 'use client';
 
 import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
-import { Task, TaskContextType, TasksResponse } from '@/types';
+import { Task, TaskContextType, TasksResponse, FilterType } from 'types';
+import { API } from '@lib/api';
 
 export const TaskContext = createContext<TaskContextType | null>(null);
 
-const API_BASE = 'https://dummyjson.com/todos';
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 30; // Load more tasks for the star background
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
+  const [filter, setFilter] = useState<FilterType>(FilterType.ALL);
   const [localTasks, setLocalTasks] = useState<Record<string, Task>>({});
   const [pendingDeletes, setPendingDeletes] = useState<Set<number>>(new Set());
+  const [isInitialized, setIsInitialized] = useState(false);
   const debounceTimersRef = useRef<Record<number, NodeJS.Timeout>>({});
 
-  // Fetch tasks from API
+  // 1. Initial Load from LocalStorage
+  useEffect(() => {
+    try {
+      const storedTasks = localStorage.getItem('taskflow_tasks');
+      const storedLocalTasks = localStorage.getItem('taskflow_localTasks');
+      const storedPendingDeletes = localStorage.getItem('taskflow_pendingDeletes');
+
+      if (storedTasks) setTasks(JSON.parse(storedTasks));
+      if (storedLocalTasks) setLocalTasks(JSON.parse(storedLocalTasks));
+      if (storedPendingDeletes) setPendingDeletes(new Set(JSON.parse(storedPendingDeletes)));
+    } catch (err) {
+      console.error('Failed to load local state', err);
+    }
+
+    setIsInitialized(true);
+  }, []);
+
+  // 2. Persist to LocalStorage on Change
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem('taskflow_tasks', JSON.stringify(tasks));
+      localStorage.setItem('taskflow_localTasks', JSON.stringify(localTasks));
+      localStorage.setItem('taskflow_pendingDeletes', JSON.stringify(Array.from(pendingDeletes)));
+    }
+  }, [tasks, localTasks, pendingDeletes, isInitialized]);
+
+  // Fetch tasks from API (Background Sync)
   const fetchTasks = useCallback(async (page: number) => {
     try {
       setLoading(true);
       setError(null);
       const skip = (page - 1) * ITEMS_PER_PAGE;
-      const url = `${API_BASE}?limit=${ITEMS_PER_PAGE}&skip=${skip}`;
-      
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Failed to fetch tasks');
-      
-      const data: TasksResponse = await response.json();
-      
+
+      const data: TasksResponse = await API.fetchTasks(ITEMS_PER_PAGE, skip);
+
       // Merge local changes with fetched data
-      const mergedTasks = data.todos.map(task => 
+      const mergedTasks = data.todos.map(task =>
         localTasks[task.id] ? { ...task, ...localTasks[task.id] } : task
       );
-      
-      setTasks(mergedTasks);
+
+      // Add purely local tasks that haven't been synced to the top
+      const localOnlyTasks = Object.values(localTasks).filter(t => !data.todos.find(dt => dt.id === t.id));
+
+      setTasks([...localOnlyTasks, ...mergedTasks]);
       setCurrentPage(page);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch tasks');
+      console.error('Background sync failed, relying on local storage', err);
+      // We don't set a hard error here since we are local-first, just warn
     } finally {
       setLoading(false);
     }
   }, [localTasks]);
 
   // Retry fetch
-  const retryFetch = useCallback(() => {
-    fetchTasks(currentPage);
+  const retryFetch = useCallback(async () => {
+    await fetchTasks(currentPage);
   }, [fetchTasks, currentPage]);
 
   // Add new task locally
@@ -59,115 +86,94 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
       userId: 1,
       localId: `local_${Date.now()}`,
     };
-    
+
     setLocalTasks(prev => ({
       ...prev,
       [newTask.id]: newTask,
     }));
-    
+
     setTasks(prev => [newTask, ...prev]);
 
-    // Post to API
+    // Post to API (Optimistic Background Sync)
     (async () => {
       try {
-        const response = await fetch(`${API_BASE}/add`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ todo: title, completed: false, userId: 1 }),
-        });
-        
-        if (!response.ok) throw new Error('Failed to add task');
-        // Keep local version, API response is mocked
+        await API.addTask(title, 1);
+        // API response is mocked, keep local version as source of truth
       } catch (err) {
-        console.error('Error adding task:', err);
-        setError('Failed to save task. Please try again.');
+        console.error('Error syncing new task in background:', err);
       }
     })();
   }, []);
 
   // Toggle task completion with debounced PATCH
   const toggleTask = useCallback((id: number) => {
+    const isCompleted = !tasks.find(t => t.id === id)?.completed;
+
     // Update local state immediately
-    setTasks(prev =>
-      prev.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
+    setTasks(prev => prev.map(task =>
+      task.id === id ? { ...task, completed: isCompleted } : task
+    ));
 
     setLocalTasks(prev => {
-      const existing = prev[id];
+      const existing = prev[id] || tasks.find(t => t.id === id);
+      if (!existing) return prev;
       return {
         ...prev,
-        [id]: existing
-          ? { ...existing, completed: !existing.completed }
-          : { ...tasks.find(t => t.id === id)!, completed: !tasks.find(t => t.id === id)!.completed },
+        [id]: { ...existing, completed: isCompleted },
       };
     });
 
-    // Clear existing timer
     if (debounceTimersRef.current[id]) {
       clearTimeout(debounceTimersRef.current[id]);
     }
 
-    // Set new debounce timer (2-3 seconds)
     debounceTimersRef.current[id] = setTimeout(async () => {
       try {
-        const taskToUpdate = tasks.find(t => t.id === id);
-        const completed = localTasks[id]?.completed ?? taskToUpdate?.completed ?? false;
-        
-        const response = await fetch(`${API_BASE}/${id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ completed: !completed }),
-        });
-
-        if (!response.ok) throw new Error('Failed to update task');
-        // Keep local version, API response is mocked
+        await API.updateTask(id, isCompleted);
       } catch (err) {
-        console.error('Error updating task:', err);
-        setError('Failed to update task. Please try again.');
+        console.error('Error syncing task toggle in background:', err);
       }
     }, 2500);
-  }, [tasks, localTasks]);
+  }, [tasks]);
 
   // Delete task
   const deleteTask = useCallback(async (id: number) => {
-    // Optimistically mark as pending delete
+    // Optimistically mark as pending delete and remove from local UI
     setPendingDeletes(prev => new Set([...prev, id]));
+    setTasks(prev => prev.filter(task => task.id !== id));
+
+    setLocalTasks(prev => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
 
     try {
-      const response = await fetch(`${API_BASE}/${id}`, {
-        method: 'DELETE',
-      });
+      await API.deleteTask(id);
 
-      if (!response.ok) throw new Error('Failed to delete task');
-
-      // Remove from UI after successful deletion
-      setTasks(prev => prev.filter(task => task.id !== id));
-      setLocalTasks(prev => {
-        const updated = { ...prev };
-        delete updated[id];
-        return updated;
-      });
       setPendingDeletes(prev => {
         const updated = new Set(prev);
         updated.delete(id);
         return updated;
       });
     } catch (err) {
+      console.error('Delete sync failed:', err);
+      // Wait to re-add it or keep it deleted locally? We chose local-first, so it stays deleted locally.
       setPendingDeletes(prev => {
         const updated = new Set(prev);
         updated.delete(id);
         return updated;
       });
-      setError('Failed to delete task. Please try again.');
     }
   }, []);
 
-  // Initial fetch
+  // Initial fetch after hydration
   useEffect(() => {
-    fetchTasks(1);
-  }, []);
+    if (isInitialized) {
+      fetchTasks(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized]);
 
   const value: TaskContextType = {
     tasks,
@@ -177,6 +183,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     filter,
     localTasks,
     pendingDeletes,
+    isInitialized,
     fetchTasks,
     retryFetch,
     addTask,
