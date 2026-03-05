@@ -33,6 +33,7 @@ export function useTaskApi(props: IUseTaskApi) {
   const syncNewTask = useCallback(async (title: string) => {
     try {
       await API.addTask(title, 1);
+      addFlag('Star added to your galaxy!', 'success');
     } catch (err) {
       console.error('Error syncing new task in background:', err);
     }

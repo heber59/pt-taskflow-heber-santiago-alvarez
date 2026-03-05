@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { ITask } from '@/types';
 import { useTasks } from '@/context/tasks/TaskContext';
+import { enviroment } from '@/config/enviroment/enviroment';
 
 export function useStarBackground() {
   const { tasks, filter } = useTasks();
@@ -43,6 +44,7 @@ export function useStarBackground() {
     return () => window.removeEventListener('wheel', handleWheel);
   }, []);
 
+  const ambientCount = Math.max(0, enviroment.TOTAL_STARS - visibleTasks.length);
   return {
     visibleTasks,
     selectedTask,
@@ -51,5 +53,6 @@ export function useStarBackground() {
     setIsModalOpen,
     scrollRef,
     smoothScrollRef,
+    ambientCount,
   };
 }

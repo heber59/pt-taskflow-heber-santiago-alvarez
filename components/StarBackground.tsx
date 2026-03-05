@@ -4,7 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { ITask } from '@/types';
 import { TaskModal } from '@/components/TaskModal';
 import { useStarBackground } from '@/hooks/useStarBackground';
-import { AmbientStars, TaskGalaxy, ScrollManager } from '@/components/stars';
+import { TaskGalaxy, ScrollManager } from '@/components/stars';
 
 export function StarBackground() {
   const {
@@ -15,6 +15,7 @@ export function StarBackground() {
     setIsModalOpen,
     scrollRef,
     smoothScrollRef,
+    ambientCount,
   } = useStarBackground();
 
   const handleTaskClick = (task: ITask) => {
@@ -30,7 +31,6 @@ export function StarBackground() {
         <pointLight position={[100, 100, 100]} intensity={1.5} />
 
         <ScrollManager scrollRef={scrollRef} smoothScrollRef={smoothScrollRef} />
-        <AmbientStars count={visibleTasks.length} />
         <TaskGalaxy
           tasks={visibleTasks}
           onTaskClick={handleTaskClick}
