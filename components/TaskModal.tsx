@@ -1,7 +1,7 @@
 'use client';
 
-import { Task } from 'types';
-import { useTasks } from '@hooks/useTasks';
+import { Task, TaskModalProps } from '@/types';
+import { useTasks } from '@/context/tasks';
 import {
     Dialog,
     DialogContent,
@@ -13,12 +13,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Trash2, CheckCircle2, Circle, X } from 'lucide-react';
-
-interface TaskModalProps {
-    task: Task | null;
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-}
 
 export function TaskModal({ task, open, onOpenChange }: TaskModalProps) {
     const { toggleTask, deleteTask } = useTasks();

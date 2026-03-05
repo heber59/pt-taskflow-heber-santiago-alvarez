@@ -63,7 +63,6 @@ src/
 │   ├── TaskList.tsx     # List container
 │   ├── TaskCube.tsx     # Three.js 3D component
 │   ├── FilterBar.tsx    # Filter controls
-│   ├── Pagination.tsx   # Page navigation
 │   ├── ErrorComponent.tsx
 │   ├── StarBackground.tsx
 │   └── ui/              # shadcn/ui components
@@ -74,7 +73,8 @@ src/
 ├── hooks/               # Custom React hooks
 │   ├── useTasks.ts
 │   ├── useFilteredTasks.ts
-│   └── usePagination.ts
+│   ├── useTaskForm.ts
+│   └── useStarBackground.ts
 │
 ├── types/               # TypeScript type definitions
 │   └── index.ts
@@ -124,7 +124,7 @@ import { useTasks } from '@/hooks/useTasks';
 
 function MyComponent() {
   const { tasks, loading, error, toggleTask } = useTasks();
-  
+
   return (
     // component JSX
   );
@@ -141,12 +141,12 @@ The app connects to the public DummyJSON API. No authentication required.
 
 ### Endpoints
 
-| Method | Endpoint | Purpose | Notes |
-|--------|----------|---------|-------|
-| GET | `/todos?limit=10&skip=SKIP` | Fetch tasks | Paginated (10 per page) |
-| POST | `/todos/add` | Create task | Returns new task |
-| PATCH | `/todos/{id}` | Update task | For completion status |
-| DELETE | `/todos/{id}` | Delete task | Removes task |
+| Method | Endpoint                    | Purpose     | Notes                   |
+| ------ | --------------------------- | ----------- | ----------------------- |
+| GET    | `/todos?limit=10&skip=SKIP` | Fetch tasks | Paginated (10 per page) |
+| POST   | `/todos/add`                | Create task | Returns new task        |
+| PATCH  | `/todos/{id}`               | Update task | For completion status   |
+| DELETE | `/todos/{id}`               | Delete task | Removes task            |
 
 ### Debounce Strategy
 
@@ -192,8 +192,7 @@ __tests__/
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { TaskProvider } from '@/context/TaskContext';
 
-const wrapper = ({ children }) => 
-  <TaskProvider>{children}</TaskProvider>;
+const wrapper = ({ children }) => <TaskProvider>{children}</TaskProvider>;
 
 describe('MyComponent', () => {
   it('should render', () => {
@@ -234,6 +233,7 @@ pnpm lint:fix
 ```
 
 **Rules**:
+
 - React hooks rules enforced
 - No unused variables (warn)
 - TypeScript strict mode enabled
@@ -250,6 +250,7 @@ pnpm format
 ```
 
 **Settings**:
+
 - 2-space indentation
 - Single quotes
 - Trailing commas (ES5)
@@ -258,6 +259,7 @@ pnpm format
 ### Pre-commit Hooks (Husky + Lint-staged)
 
 Automatically runs before commits:
+
 1. ESLint fix
 2. Prettier format
 3. Jest tests (optional)
@@ -279,6 +281,7 @@ Each task displays a rotating 3D cube powered by React Three Fiber:
 ```
 
 **Features**:
+
 - Auto-rotating with lighting
 - Color interpolation on state change
 - Smooth dissolve on deletion
@@ -295,6 +298,7 @@ Animated star field rendered with Three.js:
 ```
 
 **Performance**:
+
 - Uses Points geometry for efficiency
 - Buffer attributes for large geometry
 - Single canvas for background
@@ -306,10 +310,9 @@ Animated star field rendered with Three.js:
 See `app/globals.css` for complete token list:
 
 ```css
---primary: oklch(0.65 0.17 251)      /* Indigo */
---accent: oklch(0.58 0.15 163)       /* Cyan */
---background: oklch(0.98 0.001 221)  /* Off-white */
---foreground: oklch(0.1 0.001 221)   /* Dark navy */
+--primary: oklch(0.65 0.17 251) /* Indigo */ --accent: oklch(0.58 0.15 163) /* Cyan */
+  --background: oklch(0.98 0.001 221) /* Off-white */ --foreground: oklch(0.1 0.001 221)
+  /* Dark navy */;
 ```
 
 ### Responsive Design
@@ -318,9 +321,7 @@ Mobile-first approach with Tailwind breakpoints:
 
 ```tsx
 <div className="flex gap-2 md:gap-4 lg:gap-6">
-  // Mobile: 8px gap
-  // Tablet: 16px gap
-  // Desktop: 24px gap
+  // Mobile: 8px gap // Tablet: 16px gap // Desktop: 24px gap
 </div>
 ```
 
@@ -329,9 +330,7 @@ Mobile-first approach with Tailwind breakpoints:
 Use flexbox by default:
 
 ```tsx
-<div className="flex items-center justify-between gap-4">
-  // Horizontal layout
-</div>
+<div className="flex items-center justify-between gap-4">// Horizontal layout</div>
 ```
 
 Grid only for complex 2D layouts.
@@ -351,6 +350,7 @@ Grid only for complex 2D layouts.
 **Issue**: Black squares instead of 3D cubes
 
 **Solution**:
+
 1. Check browser console for WebGL errors
 2. Ensure hardware acceleration is enabled
 3. Update graphics drivers
@@ -361,6 +361,7 @@ Grid only for complex 2D layouts.
 **Issue**: `Cannot find module` errors
 
 **Solution**:
+
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules .next
@@ -371,6 +372,7 @@ pnpm test
 ### Port 3000 Already in Use
 
 **Solution**:
+
 ```bash
 # Use different port
 pnpm dev -- -p 3001
@@ -379,6 +381,7 @@ pnpm dev -- -p 3001
 ### Husky Hooks Not Running
 
 **Solution**:
+
 ```bash
 # Reinstall Husky
 rm -rf .husky

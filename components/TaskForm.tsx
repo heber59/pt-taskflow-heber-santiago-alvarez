@@ -1,8 +1,5 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -13,9 +10,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useTasks } from '@hooks/useTasks';
 import { Plus, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useTaskForm } from '@/hooks/useTaskForm';
 import {
   Dialog,
   DialogContent,
@@ -25,34 +21,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-const formSchema = z.object({
-  todo: z.string().min(2, {
-    message: 'Task must be at least 2 characters.',
-  }),
-});
 
 export function TaskForm() {
-  const { addTask } = useTasks();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      todo: '',
-    },
-  });
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
-    try {
-      addTask(values.todo);
-      form.reset();
-      setOpen(false); // Close modal on success
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  const { form, isSubmitting, open, setOpen, onSubmit } = useTaskForm();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

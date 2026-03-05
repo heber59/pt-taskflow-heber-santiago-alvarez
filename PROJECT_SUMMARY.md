@@ -7,7 +7,7 @@
 ### Key Statistics
 
 - **Components Created**: 8 custom components + shadcn/ui integration
-- **Hooks Created**: 3 custom hooks (useTasks, useFilteredTasks, usePagination)
+- **Hooks Created**: 4 custom hooks (useTasks, useFilteredTasks, useTaskForm, useStarBackground)
 - **Tests Written**: 4 comprehensive test suites (hooks + components)
 - **Configuration Files**: 6 (ESLint, Prettier, Jest, Husky, TypeScript)
 - **Type-Safe**: Full TypeScript coverage with custom types
@@ -19,18 +19,20 @@
 ### Frontend Features
 
 ✅ **Task Management**
+
 - Create, read, update, delete tasks via REST API
-- 10 tasks per page with next/previous navigation
 - Client-side filtering (All/Completed/Pending) without extra API calls
 - Optimistic UI updates with 2-3 second debounce before server sync
 
 ✅ **Advanced State Management**
+
 - React Context API for global state
 - Debounced PATCH requests to prevent excessive API calls
 - Local state tracking with localTasks object
 - Pending deletes UI feedback
 
 ✅ **3D Animations & Visual Effects**
+
 - Interactive 3D cubes using React Three Fiber + Three.js
 - Color transitions: Gray (pending) → Green (completed)
 - Dissolve animation on task deletion
@@ -38,12 +40,14 @@
 - Animated star background with parallax effect
 
 ✅ **Error Handling & UX**
+
 - Graceful error states with retry functionality
 - Loading indicators for async operations
 - Success/error toast notifications
 - Form validation with user feedback
 
 ✅ **Responsive Design**
+
 - Mobile-first responsive layout
 - Modern color scheme: Indigo primary, Cyan accent
 - Tailwind CSS with custom design tokens
@@ -52,24 +56,28 @@
 ### Developer Experience
 
 ✅ **Testing**
+
 - Jest configuration with RTL (React Testing Library)
 - 4 test files covering hooks and components
 - Mock setup for Fetch API and Canvas
 - 70%+ code coverage target
 
 ✅ **Code Quality**
+
 - ESLint + TypeScript for type safety
 - Prettier for consistent code formatting
 - Pre-commit hooks with Husky + lint-staged
 - Automatic code fixes on commit
 
 ✅ **Documentation**
+
 - Comprehensive README with feature descriptions
 - Detailed SETUP.md with development workflow
 - Inline code comments for complex logic
 - Clear folder structure with organized architecture
 
 ✅ **Build & Deployment**
+
 - Next.js 16 with App Router (latest features)
 - Optimized production builds
 - Environment variable configuration
@@ -78,31 +86,37 @@
 ## Technology Stack
 
 ### Core
+
 - **Next.js 16** - React framework with App Router, SSR, optimization
 - **React 19** - Latest React with all new features
 - **TypeScript 5.7** - Full type safety across codebase
 
 ### UI & Styling
+
 - **Tailwind CSS 4** - Utility-first CSS with PostCSS support
 - **shadcn/ui** - Accessible component library (30+ components)
 - **Lucide React** - Beautiful, consistent icon library
 
 ### 3D & Animation
+
 - **Three.js r128** - WebGL 3D graphics library
 - **React Three Fiber v8** - React renderer for Three.js
 - **@react-three/drei** - Useful utilities (OrbitControls, etc.)
 
 ### State & Forms
+
 - **React Context API** - Built-in state management
 - **React Hooks** - Custom hooks for business logic
 - **React Hook Form** - Efficient form handling (pre-installed)
 
 ### Testing
+
 - **Jest 29** - Testing framework with Next.js support
 - **React Testing Library 14** - Component testing utilities
 - **@testing-library/jest-dom** - Custom matchers
 
 ### Code Quality
+
 - **ESLint 8** - JavaScript/TypeScript linting
 - **Prettier 3** - Code formatter
 - **Husky 8** - Git hooks management
@@ -123,7 +137,6 @@
 │   ├── TaskList.tsx               # List container with loading
 │   ├── TaskCube.tsx               # Three.js 3D cube component
 │   ├── FilterBar.tsx              # Filter controls
-│   ├── Pagination.tsx             # Page navigation
 │   ├── ErrorComponent.tsx         # Error state with retry
 │   ├── StarBackground.tsx         # 3D star field animation
 │   └── ui/                        # shadcn/ui components (30+)
@@ -134,7 +147,6 @@
 ├── hooks/
 │   ├── useTasks.ts               # Access task context
 │   ├── useFilteredTasks.ts       # Filtered tasks with memoization
-│   ├── usePagination.ts          # Pagination logic
 │   ├── use-mobile.ts             # Responsive breakpoint detection
 │   └── use-toast.ts              # Toast notifications
 │
@@ -180,12 +192,14 @@
 The application integrates with the public DummyJSON API (no authentication required).
 
 **Endpoints Used**:
+
 - `GET /todos?limit=10&skip=SKIP` - Fetch paginated tasks
 - `POST /todos/add` - Create new task
 - `PATCH /todos/{id}` - Update task status
 - `DELETE /todos/{id}` - Delete task
 
 **Smart Patterns**:
+
 - Debounced PATCH requests (2-3 seconds) to reduce API calls
 - Optimistic UI updates for instant feedback
 - Local state tracking before server sync
@@ -235,7 +249,8 @@ TaskProvider (app/page.tsx)
 
 1. **useTasks** - Access TaskContext with error handling
 2. **useFilteredTasks** - Get filtered tasks with memoization
-3. **usePagination** - Pagination state and navigation
+3. **useTaskForm** - Manage new task form state and submission
+4. **useStarBackground** - Star field interaction, scroll & modal state
 
 ## Testing Strategy
 
@@ -258,15 +273,15 @@ pnpm test:coverage    # Coverage report
 
 ### Color Palette
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| Primary | oklch(0.65 0.17 251) - Indigo | Main CTAs, accent states |
-| Accent | oklch(0.58 0.15 163) - Cyan | Secondary highlights |
-| Background | oklch(0.98 0.001 221) - Off-white | Page background |
-| Foreground | oklch(0.1 0.001 221) - Dark Navy | Text content |
-| Status (Complete) | #22c55e - Green | Completed tasks |
-| Status (Pending) | #9ca3af - Gray | Pending tasks |
-| Destructive | oklch(0.62 0.2 25) - Red | Delete actions |
+| Token             | Value                             | Usage                    |
+| ----------------- | --------------------------------- | ------------------------ |
+| Primary           | oklch(0.65 0.17 251) - Indigo     | Main CTAs, accent states |
+| Accent            | oklch(0.58 0.15 163) - Cyan       | Secondary highlights     |
+| Background        | oklch(0.98 0.001 221) - Off-white | Page background          |
+| Foreground        | oklch(0.1 0.001 221) - Dark Navy  | Text content             |
+| Status (Complete) | #22c55e - Green                   | Completed tasks          |
+| Status (Pending)  | #9ca3af - Gray                    | Pending tasks            |
+| Destructive       | oklch(0.62 0.2 25) - Red          | Delete actions           |
 
 ### Typography
 
@@ -293,18 +308,21 @@ pnpm test:coverage    # Coverage report
 ## Code Quality Standards
 
 ### ESLint Rules
+
 - React hooks rules enforced
 - TypeScript strict mode
 - No unused variables (warnings)
 - Accessibility checks
 
 ### Prettier Formatting
+
 - 2-space indentation
 - Single quotes
 - 100-character line width
 - Trailing commas (ES5)
 
 ### Pre-commit Checks
+
 - ESLint auto-fix
 - Prettier formatting
 - File staging
@@ -320,26 +338,31 @@ pnpm test:coverage    # Coverage report
 ## Getting Started
 
 ### 1. Install Dependencies
+
 ```bash
 pnpm install
 ```
 
 ### 2. Initialize Git Hooks
+
 ```bash
 pnpm prepare
 ```
 
 ### 3. Start Development
+
 ```bash
 pnpm dev
 ```
 
 ### 4. Visit Application
+
 Open `http://localhost:3000` in your browser
 
 ## Common Tasks
 
 ### Add a New Component
+
 ```bash
 # Create file in components/
 # Implement React component
@@ -348,6 +371,7 @@ Open `http://localhost:3000` in your browser
 ```
 
 ### Add a New Hook
+
 ```bash
 # Create file in hooks/
 # Implement custom hook
@@ -356,6 +380,7 @@ Open `http://localhost:3000` in your browser
 ```
 
 ### Modify API
+
 ```bash
 # Update endpoint in lib/api.ts
 # Update TaskContext if needed
@@ -364,6 +389,7 @@ Open `http://localhost:3000` in your browser
 ```
 
 ### Deploy to Production
+
 ```bash
 # Commit and push to main
 # Vercel auto-deploys
@@ -394,18 +420,21 @@ Open `http://localhost:3000` in your browser
 ## Deployment Options
 
 ### Vercel (Recommended)
+
 ```bash
 # Push to GitHub and connect to Vercel
 # Auto-deploys on push to main
 ```
 
 ### Self-Hosted
+
 ```bash
 pnpm build
 pnpm start
 ```
 
 ### Docker
+
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -439,6 +468,7 @@ Contributions are welcome! Please follow the existing code style and include tes
 ## Final Notes
 
 This project serves as a complete example of modern React development best practices:
+
 - Strong type safety with TypeScript
 - Clean component architecture
 - Comprehensive testing strategy

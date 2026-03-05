@@ -1,11 +1,11 @@
 'use client';
 
-import { TaskProvider } from '@/context/TaskContext';
+import { TaskProvider } from '@/context/tasks';
 import { TaskForm } from '@components/TaskForm';
 import { FilterBar } from '@components/FilterBar';
 import { ErrorComponent } from '@components/ErrorComponent';
 import { StarBackground } from '@components/StarBackground';
-import { useTasks } from '@hooks/useTasks';
+import { useTasks } from '@/context/tasks';
 import { Loader2 } from 'lucide-react';
 
 function PageContent() {

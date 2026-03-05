@@ -3,11 +3,7 @@
 import { AlertCircle, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-
-interface ErrorComponentProps {
-  message: string;
-  onRetry: () => void;
-}
+import { ErrorComponentProps } from '@/types';
 
 export function ErrorComponent({ message, onRetry }: ErrorComponentProps) {
   return (

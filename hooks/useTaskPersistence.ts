@@ -1,17 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { Task } from 'types';
+import { Task, PersistedState } from '@/types';
 
 const STORAGE_KEYS = {
   tasks: 'taskflow_tasks',
   localTasks: 'taskflow_localTasks',
   pendingDeletes: 'taskflow_pendingDeletes',
 } as const;
-
-export interface PersistedState {
-  tasks: Task[];
-  localTasks: Record<string, Task>;
-  pendingDeletes: number[];
-}
 
 export function loadPersistedState(): PersistedState {
   try {

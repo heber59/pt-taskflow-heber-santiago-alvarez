@@ -1,6 +1,6 @@
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
-import { API_RETRY_COUNT, API_RETRY_TIMEOUT, API_BASE_URL } from './apiConfig';
+import { API_RETRY_COUNT, API_RETRY_TIMEOUT, API_BASE_URL } from '@/lib/apiConfig';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,9 +11,9 @@ export const api = axios.create({
 
 // Configure automatic retries for idempotent requests
 axiosRetry(api, {
-  retries: API_RETRY_COUNT, 
+  retries: API_RETRY_COUNT,
   retryDelay: (retryCount) => {
-    return retryCount * API_RETRY_TIMEOUT; 
+    return retryCount * API_RETRY_TIMEOUT;
   },
   retryCondition: (error) => {
     // Retry on network errors or 5xx status codes

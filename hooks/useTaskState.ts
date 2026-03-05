@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Task, FilterType } from 'types';
-import { loadPersistedState, useTaskPersistence } from './useTaskPersistence';
-import { useTaskApi } from './useTaskApi';
+import { Task, FilterType } from '@/types';
+import { loadPersistedState, useTaskPersistence } from '@/hooks/useTaskPersistence';
+import { useTaskApi } from '@/hooks/useTaskApi';
 
 const ITEMS_PER_PAGE = 30;
 

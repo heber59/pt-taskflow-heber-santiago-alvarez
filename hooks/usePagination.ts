@@ -1,6 +1,6 @@
 'use client';
 
-import { useTasks } from './useTasks';
+import { useTasks } from '@/context/tasks';
 
 const ITEMS_PER_PAGE = 10;
 

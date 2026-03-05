@@ -1,12 +1,6 @@
 'use client';
 
-import React, { createContext } from 'react';
-import { TaskContextType } from 'types';
-import { useTaskState } from '@hooks/useTaskState';
-
-export const TaskContext = createContext<TaskContextType | null>(null);
-
-export function TaskProvider({ children }: { children: React.ReactNode }) {
-  const value = useTaskState();
-  return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
-}
+// deprecated entry point kept for compatibility
+// forwards everything to the new `context/tasks` module
+export { TaskProvider, TaskContext } from './tasks/TaskContext';
+export { useTasks } from './tasks';

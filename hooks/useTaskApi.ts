@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { Task, TasksResponse } from 'types';
+import { Task, TasksResponse } from '@/types';
 import { API } from '@lib/api';
 
 const DEBOUNCE_MS = 2500;

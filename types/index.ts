@@ -6,3 +6,5 @@ export * from './ToastMessage';
 export * from './TaskCubeProps';
 export * from './FilterType';
 export * from './ToastType';
+export * from './ComponentProps';
+export * from './HookTypes';

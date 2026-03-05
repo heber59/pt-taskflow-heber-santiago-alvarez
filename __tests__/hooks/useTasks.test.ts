@@ -1,6 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { TaskProvider } from '@/context/TaskContext';
-import { useTasks } from '@/hooks/useTasks';
+import { TaskProvider } from '@/context/tasks';
+import { useTasks } from '@/context/tasks';
 import React from 'react';
 import { FilterType } from '@/types/FilterType';
 
@@ -17,9 +17,7 @@ describe('useTasks', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
-        todos: [
-          { id: 1, todo: 'Test task', completed: false, userId: 1 },
-        ],
+        todos: [{ id: 1, todo: 'Test task', completed: false, userId: 1 }],
         total: 1,
         skip: 0,
         limit: 10,
@@ -30,7 +28,7 @@ describe('useTasks', () => {
   it('should throw error when used outside TaskProvider', () => {
     // Suppress console.error for this test
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    
+
     expect(() => {
       renderHook(() => useTasks());
     }).toThrow('useTasks must be used within a TaskProvider');
@@ -60,7 +58,7 @@ describe('useTasks', () => {
     const { result } = renderHook(() => useTasks(), { wrapper });
 
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     act(() => {
@@ -76,9 +74,7 @@ describe('useTasks', () => {
     mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
-        todos: [
-          { id: 1, todo: 'Test task', completed: false, userId: 1 },
-        ],
+        todos: [{ id: 1, todo: 'Test task', completed: false, userId: 1 }],
         total: 1,
         skip: 0,
         limit: 10,
@@ -98,7 +94,7 @@ describe('useTasks', () => {
     });
 
     await waitFor(() => {
-      const task = result.current.tasks.find(t => t.id === taskId);
+      const task = result.current.tasks.find((t) => t.id === taskId);
       expect(task?.completed).toBe(true);
     });
   });

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { TaskForm } from '@components/TaskForm';
-import { TaskProvider } from '@/context/TaskContext';
+import { TaskProvider } from '@/context/tasks';
 import React from 'react';
 import '@testing-library/jest-dom';
 
@@ -32,7 +32,7 @@ describe('TaskForm', () => {
   it('should render form inputs', () => {
     renderWithProvider(<TaskForm />);
 
-    expect(screen.getByPlaceholderText('Add a new task...')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('What needs to be done?')).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
@@ -43,7 +43,7 @@ describe('TaskForm', () => {
     fireEvent.click(button);
 
     await waitFor(() => {
-      expect(screen.getByText('Please enter a task description')).toBeInTheDocument();
+      expect(screen.getByText('Task must be at least 2 characters.')).toBeInTheDocument();
     });
   });
 
