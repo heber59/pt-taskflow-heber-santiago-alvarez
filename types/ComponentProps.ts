@@ -2,10 +2,6 @@ import { IFlag } from './Flag';
 import { ITask } from './Task';
 import React from 'react';
 
-interface IAmbientStarsProps {
-  count: number;
-}
-
 interface IStarProps {
   task: ITask;
   onClick: (task: ITask) => void;
@@ -40,7 +36,6 @@ interface IFlagItem {
 }
 
 export type {
-  IAmbientStarsProps,
   IStarProps,
   ITaskGalaxyProps,
   IScrollManagerProps,
