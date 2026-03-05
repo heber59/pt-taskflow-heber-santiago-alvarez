@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Task, FilterType } from '@/types';
 import { loadPersistedState, useTaskPersistence } from '@/hooks/useTaskPersistence';
 import { useTaskApi } from '@/hooks/useTaskApi';
-
-const ITEMS_PER_PAGE = 30;
+import { enviroment } from '@/config/enviroment/enviroment';
 
 export function useTaskState() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -11,14 +10,12 @@ export function useTaskState() {
   const [pendingDeletes, setPendingDeletes] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [filter, setFilter] = useState<FilterType>(FilterType.ALL);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const api = useTaskApi();
   useTaskPersistence(tasks, localTasks, pendingDeletes, isInitialized);
 
-  // Hydrate from localStorage once on mount
   useEffect(() => {
     const saved = loadPersistedState();
     if (saved.tasks.length) setTasks(saved.tasks);
@@ -32,9 +29,8 @@ export function useTaskState() {
       try {
         setLoading(true);
         setError(null);
-        const merged = await api.fetchPage(page, ITEMS_PER_PAGE, localTasks);
+        const merged = await api.fetchPage(page, enviroment.ITEMS_PER_PAGE, localTasks);
         setTasks(merged);
-        setCurrentPage(page);
       } catch (err) {
         console.error('Background sync failed, relying on local storage', err);
       } finally {
@@ -108,18 +104,16 @@ export function useTaskState() {
     tasks,
     loading,
     error,
-    currentPage,
     filter,
     localTasks,
     pendingDeletes,
     isInitialized,
     fetchTasks,
-    retryFetch: () => fetchTasks(currentPage),
+    retryFetch: () => fetchTasks(1),
     addTask,
     toggleTask,
     deleteTask,
     setFilter,
-    setPage: setCurrentPage,
     clearError: () => setError(null),
   };
 }

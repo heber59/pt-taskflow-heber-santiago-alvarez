@@ -6,15 +6,21 @@ import { ScrollManagerProps } from '@/types';
 
 // Smooths the rawest scroll input for frame-perfect updates
 export function ScrollManager({ scrollRef, smoothScrollRef }: ScrollManagerProps) {
-    useFrame(() => {
-        if (smoothScrollRef.current !== undefined && scrollRef.current !== undefined) {
-            smoothScrollRef.current = THREE.MathUtils.lerp(
-                smoothScrollRef.current,
-                scrollRef.current,
-                0.05
-            );
-        }
-    });
+  useFrame(() => {
+    if (smoothScrollRef.current !== undefined && scrollRef.current !== undefined) {
+      smoothScrollRef.current = THREE.MathUtils.lerp(
+        smoothScrollRef.current,
+        scrollRef.current,
+        0.05
+      );
 
-    return null;
+      scrollRef.current *= 0.95;
+
+      if (Math.abs(scrollRef.current) < 0.0001) {
+        scrollRef.current = 0;
+      }
+    }
+  });
+
+  return null;
 }

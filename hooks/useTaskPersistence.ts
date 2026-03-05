@@ -25,7 +25,6 @@ export function useTaskPersistence(
   pendingDeletes: Set<number>,
   isInitialized: boolean
 ) {
-  // Use refs to avoid triggering the effect on every render
   const tasksRef = useRef(tasks);
   const localTasksRef = useRef(localTasks);
   const pendingDeletesRef = useRef(pendingDeletes);

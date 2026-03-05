@@ -1,8 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { Task, TasksResponse } from '@/types';
 import { API } from '@lib/api';
-
-const DEBOUNCE_MS = 2500;
+import { enviroment } from '@/config/enviroment/enviroment';
 
 export function useTaskApi() {
   const debounceTimersRef = useRef<Record<number, NodeJS.Timeout>>({});
@@ -46,7 +45,7 @@ export function useTaskApi() {
       } catch (err) {
         console.error('Error syncing task toggle in background:', err);
       }
-    }, DEBOUNCE_MS);
+    }, enviroment.DEBOUNCE_MS);
   }, []);
 
   const syncDelete = useCallback(async (id: number) => {

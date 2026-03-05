@@ -6,7 +6,6 @@ import { TaskModal } from '@/components/TaskModal';
 import { useStarBackground } from '@/hooks/useStarBackground';
 import { AmbientStars, TaskGalaxy, ScrollManager } from '@/components/stars';
 
-// Main 3D star background component - orchestrates all star visualization pieces
 export function StarBackground() {
   const {
     visibleTasks,
@@ -32,12 +31,14 @@ export function StarBackground() {
 
         <ScrollManager scrollRef={scrollRef} smoothScrollRef={smoothScrollRef} />
         <AmbientStars count={visibleTasks.length} />
-        <TaskGalaxy tasks={visibleTasks} onTaskClick={handleTaskClick} scrollRef={smoothScrollRef} />
+        <TaskGalaxy
+          tasks={visibleTasks}
+          onTaskClick={handleTaskClick}
+          scrollRef={smoothScrollRef}
+        />
       </Canvas>
 
       <TaskModal task={selectedTask} open={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
   );
 }
-
-

@@ -12,7 +12,6 @@ export function useStarBackground() {
   const scrollRef = useRef(0);
   const smoothScrollRef = useRef(0);
 
-  // keep the selected task reference up to date when the underlying tasks list changes
   useEffect(() => {
     if (selectedTask) {
       const current = tasks.find((t) => t.id === selectedTask.id);
@@ -22,7 +21,6 @@ export function useStarBackground() {
     }
   }, [tasks, selectedTask?.id]);
 
-  // filter the tasks according to the current filter value
   const visibleTasks = useMemo(() => {
     switch (filter) {
       case 'completed':
@@ -35,13 +33,11 @@ export function useStarBackground() {
     }
   }, [tasks, filter]);
 
-  // wheel handling logic extracted from component
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      const maxDelta = 120;
-      const clampedDelta = Math.max(-maxDelta, Math.min(maxDelta, e.deltaY));
-      scrollRef.current += clampedDelta * 0.08;
-      scrollRef.current = THREE.MathUtils.clamp(scrollRef.current, -10, 10);
+      const sensitivity = 1.5;
+
+      scrollRef.current += e.deltaY * sensitivity;
     };
 
     window.addEventListener('wheel', handleWheel, { passive: true });
