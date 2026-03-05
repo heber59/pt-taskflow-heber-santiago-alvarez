@@ -5,13 +5,14 @@ A modern, fully-featured task management application built with Next.js 16, Reac
 ## Features
 
 ### Core Functionality
+
 - **CRUD Operations**: Create, read, update, and delete tasks seamlessly
 - **Real-time API Integration**: Consumes DummyJSON Todos API for all operations
-- **Pagination**: Navigate through tasks with next/previous buttons (10 items per page)
 - **Smart Filtering**: Filter tasks by All, Completed, or Pending status without extra API calls
 - **Optimistic Updates**: Immediate UI updates with debounced server sync (2-3 seconds)
 
 ### Advanced Features
+
 - **3D Animations**: Interactive Three.js cubes representing each task
   - Color transitions: Gray (pending) → Green (completed)
   - Dissolve animations on task deletion
@@ -22,6 +23,7 @@ A modern, fully-featured task management application built with Next.js 16, Reac
 - **Debounced Updates**: Task state changes wait 2-3 seconds before syncing to prevent unnecessary API calls
 
 ### Developer Experience
+
 - **TypeScript**: Full type safety across the application
 - **Jest + React Testing Library**: Comprehensive test coverage for hooks and components
 - **ESLint + Prettier**: Code quality and consistent formatting
@@ -41,16 +43,16 @@ A modern, fully-featured task management application built with Next.js 16, Reac
 │   ├── TaskForm.tsx        # Add new task form
 │   ├── TaskList.tsx        # Task list container
 │   ├── FilterBar.tsx       # Filter controls (All/Completed/Pending)
-│   ├── Pagination.tsx      # Page navigation
-│   ├── ErrorComponent.tsx  # Error state with retry
+│ │   ├── ErrorComponent.tsx  # Error state with retry
 │   └── StarBackground.tsx  # Animated 3D star background
 ├── context/
 │   └── TaskContext.tsx     # Global state management with Task operations
 ├── hooks/
 │   ├── useTasks.ts         # Access task context
 │   ├── useFilteredTasks.ts # Get filtered tasks without extra API calls
-│   └── usePagination.ts    # Pagination state and navigation
-├── types/
+│   ├── useTaskForm.ts      # Add task form logic
+│   └── useStarBackground.ts # Star field state and scroll handling
+│ ├── types/
 │   └── index.ts            # TypeScript interfaces and types
 ├── __tests__/
 │   ├── hooks/
@@ -114,18 +116,22 @@ pnpm start
 The app integrates with the **DummyJSON Todos API**:
 
 ### Endpoints Used
+
 - **GET** `/todos?limit=10&skip=SKIP` - Fetch paginated tasks
 - **POST** `/todos/add` - Create new task
 - **PATCH** `/todos/{id}` - Update task completion status
 - **DELETE** `/todos/{id}` - Delete task
 
 ### Debounce Strategy
+
 Task completion updates are debounced for 2-3 seconds to:
+
 1. Allow users to change their mind before sending to server
 2. Prevent excessive API calls for rapid state changes
 3. Improve perceived performance with instant UI feedback
 
 ### Local State Management
+
 - New tasks are stored locally before API confirmation
 - Task state changes (completed/pending) are reflected immediately in the UI
 - Pending deletes show a "Deleting..." indicator
@@ -134,6 +140,7 @@ Task completion updates are debounced for 2-3 seconds to:
 ## Design System
 
 ### Color Palette
+
 - **Primary**: Indigo (oklch(0.65 0.17 251)) - Main actions and accents
 - **Accent**: Cyan (oklch(0.58 0.15 163)) - Secondary highlights
 - **Background**: Off-white (oklch(0.98 0.001 221)) - Clean, modern look
@@ -144,11 +151,13 @@ Task completion updates are debounced for 2-3 seconds to:
   - Red for destructive actions
 
 ### Typography
+
 - **Font**: Geist (system default)
 - **Line Height**: 1.4-1.6 for readability
 - **Scale**: Semantic sizing with Tailwind classes
 
 ### Responsive Design
+
 - Mobile-first approach
 - Flexbox-based layouts
 - Optimized for all screen sizes
@@ -157,7 +166,8 @@ Task completion updates are debounced for 2-3 seconds to:
 ## Testing
 
 ### Test Coverage
-- **Hooks**: `useTasks`, `useFilteredTasks`, `usePagination`
+
+- **Hooks**: `useTasks`, `useFilteredTasks`, `useTaskForm`, `useStarBackground`
 - **Components**: `TaskCard`, `TaskForm`, `TaskList`, `FilterBar`
 - **Integration**: Context provider integration, API interactions
 - **Mocks**: Fetch API, Canvas/Three.js for unit tests
@@ -192,29 +202,35 @@ pnpm test:coverage
 ## Dependencies
 
 ### Core
+
 - **Next.js 16** - React framework with App Router
 - **React 19** - UI library
 - **TypeScript** - Type safety
 
 ### UI & Styling
+
 - **Tailwind CSS 4** - Utility-first CSS
 - **shadcn/ui** - Accessible component library
 - **Lucide React** - Beautiful icons
 
 ### 3D & Animation
+
 - **Three.js r128** - 3D graphics library
 - **React Three Fiber** - React renderer for Three.js
 - **@react-three/drei** - Utilities for R3F
 
 ### Form & Validation
+
 - **React Hook Form** - Efficient forms
 - **Zod** - TypeScript-first validation
 
 ### State Management
+
 - **Context API** - Built-in React state management
 - **React Hooks** - Stateful logic extraction
 
 ### Development
+
 - **Jest** - Testing framework
 - **React Testing Library** - Component testing
 - **ESLint** - Code linting
@@ -227,6 +243,7 @@ pnpm test:coverage
 Currently, no environment variables are required. The app uses the public DummyJSON API.
 
 For production deployment, consider adding:
+
 - `NEXT_PUBLIC_API_URL` - Custom API endpoint
 - `API_SECRET` - API authentication (if needed)
 

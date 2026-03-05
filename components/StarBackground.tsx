@@ -1,57 +1,44 @@
 'use client';
 
 import { Canvas } from '@react-three/fiber';
-import { useRef, useMemo } from 'react';
-import * as THREE from 'three';
-
-function Stars({ count = 500 }: { count?: number }) {
-  const pointsRef = useRef<THREE.Points>(null);
-
-  const positions = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 200;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 200;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 200;
-    }
-    return pos;
-  }, [count]);
-
-  const sizes = useMemo(() => {
-    const size = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      size[i] = Math.random() * 2 + 0.5;
-    }
-    return size;
-  }, [count]);
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
-        />
-        <bufferAttribute
-          attach="attributes-size"
-          count={count}
-          array={sizes}
-          itemSize={1}
-        />
-      </bufferGeometry>
-      <pointsMaterial size={1} color="#6366f1" sizeAttenuation transparent />
-    </points>
-  );
-}
+import { Task } from '@/types';
+import { TaskModal } from '@/components/TaskModal';
+import { useStarBackground } from '@/hooks/useStarBackground';
+import { AmbientStars, TaskGalaxy, ScrollManager } from '@/components/stars';
 
 export function StarBackground() {
+  const {
+    visibleTasks,
+    selectedTask,
+    setSelectedTask,
+    isModalOpen,
+    setIsModalOpen,
+    scrollRef,
+    smoothScrollRef,
+  } = useStarBackground();
+
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
   return (
-    <div className="fixed inset-0 -z-10 w-full h-full">
-      <Canvas camera={{ position: [0, 0, 100], far: 500 }}>
-        <Stars count={500} />
+    <div className="fixed inset-0 z-0 w-full h-full bg-[#020617]">
+      <Canvas camera={{ position: [0, 0, 100], far: 1000 }} gl={{ antialias: true }}>
+        <color attach="background" args={['#020617']} />
+        <ambientLight intensity={0.5} />
+        <pointLight position={[100, 100, 100]} intensity={1.5} />
+
+        <ScrollManager scrollRef={scrollRef} smoothScrollRef={smoothScrollRef} />
+        <AmbientStars count={visibleTasks.length} />
+        <TaskGalaxy
+          tasks={visibleTasks}
+          onTaskClick={handleTaskClick}
+          scrollRef={smoothScrollRef}
+        />
       </Canvas>
+
+      <TaskModal task={selectedTask} open={isModalOpen} onOpenChange={setIsModalOpen} />
     </div>
   );
 }

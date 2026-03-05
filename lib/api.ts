@@ -1,49 +1,50 @@
-const API_BASE = 'https://dummyjson.com';
+import { enviroment } from '@/config/enviroment/enviroment';
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
+
+export const api = axios.create({
+  baseURL: enviroment.API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Configure automatic retries for idempotent requests
+axiosRetry(api, {
+  retries: enviroment.API_RETRY_COUNT,
+  retryDelay: (retryCount) => {
+    return retryCount * enviroment.API_RETRY_TIMEOUT;
+  },
+  retryCondition: (error) => {
+    // Retry on network errors or 5xx status codes
+    return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 500;
+  },
+});
 
 export const API = {
-  /**
-   * Fetch paginated tasks
-   */
   fetchTasks: async (limit: number, skip: number) => {
-    const response = await fetch(`${API_BASE}/todos?limit=${limit}&skip=${skip}`);
-    if (!response.ok) throw new Error('Failed to fetch tasks');
-    return response.json();
+    const response = await api.get(`?limit=${limit}&skip=${skip}`);
+    return response.data;
   },
 
-  /**
-   * Add a new task
-   */
   addTask: async (todo: string, userId: number = 1) => {
-    const response = await fetch(`${API_BASE}/todos/add`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ todo, completed: false, userId }),
+    const response = await api.post('/add', {
+      todo,
+      completed: false,
+      userId,
     });
-    if (!response.ok) throw new Error('Failed to add task');
-    return response.json();
+    return response.data;
   },
 
-  /**
-   * Update task completion status
-   */
   updateTask: async (id: number, completed: boolean) => {
-    const response = await fetch(`${API_BASE}/todos/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ completed }),
+    const response = await api.patch(`/${id}`, {
+      completed,
     });
-    if (!response.ok) throw new Error('Failed to update task');
-    return response.json();
+    return response.data;
   },
 
-  /**
-   * Delete a task
-   */
   deleteTask: async (id: number) => {
-    const response = await fetch(`${API_BASE}/todos/${id}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) throw new Error('Failed to delete task');
-    return response.json();
+    const response = await api.delete(`/${id}`);
+    return response.data;
   },
 };

@@ -1,30 +1,24 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useTasks } from './useTasks';
 import { Task } from '@/types';
+import { useTasks } from '@/context/tasks';
+import { FilterType } from '@/types';
 
-export function useFilteredTasks() {
-  const { tasks, filter, pendingDeletes } = useTasks();
+// Returns the list of tasks filtered according to the current filter value
+// Memoized to avoid unnecessary recalculations on unrelated state changes.
+export function useFilteredTasks(): Task[] {
+  const { tasks, filter } = useTasks();
 
-  const filteredTasks = useMemo(() => {
-    return tasks
-      .filter(task => {
-        // Exclude pending deletes
-        if (pendingDeletes.has(task.id)) return false;
-
-        // Apply filter
-        if (filter === 'completed') return task.completed;
-        if (filter === 'pending') return !task.completed;
-        return true;
-      })
-      .sort((a, b) => {
-        // New tasks first, then by id
-        if (a.localId && !b.localId) return -1;
-        if (!a.localId && b.localId) return 1;
-        return b.id - a.id;
-      });
-  }, [tasks, filter, pendingDeletes]);
-
-  return filteredTasks;
+  return useMemo(() => {
+    switch (filter) {
+      case FilterType.COMPLETED:
+        return tasks.filter((t) => t.completed);
+      case FilterType.PENDING:
+        return tasks.filter((t) => !t.completed);
+      case FilterType.ALL:
+      default:
+        return tasks;
+    }
+  }, [tasks, filter]);
 }
