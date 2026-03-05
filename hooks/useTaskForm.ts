@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useTasks } from '@/context/tasks';
+
 import { FormValues } from '@/types';
+import { useTasks } from '@/context/tasks/TaskContext';
 
 const formSchema = z.object({
   todo: z.string().min(2, {

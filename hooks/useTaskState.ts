@@ -3,8 +3,11 @@ import { Task, FilterType } from '@/types';
 import { loadPersistedState, useTaskPersistence } from '@/hooks/useTaskPersistence';
 import { useTaskApi } from '@/hooks/useTaskApi';
 import { enviroment } from '@/config/enviroment/enviroment';
+import { useFlag } from '@/components/FlagProvider';
 
 export function useTaskState() {
+  const { addFlag } = useFlag();
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [localTasks, setLocalTasks] = useState<Record<string, Task>>({});
   const [pendingDeletes, setPendingDeletes] = useState<Set<number>>(new Set());
@@ -13,7 +16,7 @@ export function useTaskState() {
   const [filter, setFilter] = useState<FilterType>(FilterType.ALL);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const api = useTaskApi();
+  const api = useTaskApi({ addFlag });
   useTaskPersistence(tasks, localTasks, pendingDeletes, isInitialized);
 
   useEffect(() => {
@@ -23,7 +26,7 @@ export function useTaskState() {
     if (saved.pendingDeletes.length) setPendingDeletes(new Set(saved.pendingDeletes));
     setIsInitialized(true);
   }, []);
-
+  console.log(enviroment);
   const fetchTasks = useCallback(
     async (page: number) => {
       try {
@@ -33,6 +36,7 @@ export function useTaskState() {
         setTasks(merged);
       } catch (err) {
         console.error('Background sync failed, relying on local storage', err);
+        setError('Failed to fetch tasks from server. Showing local data.');
       } finally {
         setLoading(false);
       }

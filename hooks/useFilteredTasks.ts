@@ -1,13 +1,8 @@
-'use client';
-
 import { useMemo } from 'react';
-import { Task } from '@/types';
-import { useTasks } from '@/context/tasks';
+import { useTasks } from '@/context/tasks/TaskContext';
 import { FilterType } from '@/types';
 
-// Returns the list of tasks filtered according to the current filter value
-// Memoized to avoid unnecessary recalculations on unrelated state changes.
-export function useFilteredTasks(): Task[] {
+export function useFilteredTasks() {
   const { tasks, filter } = useTasks();
 
   return useMemo(() => {

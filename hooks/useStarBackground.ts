@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import * as THREE from 'three';
 import { Task } from '@/types';
-import { useTasks } from '@/context/tasks';
+import { useTasks } from '@/context/tasks/TaskContext';
 
 export function useStarBackground() {
   const { tasks, filter } = useTasks();
