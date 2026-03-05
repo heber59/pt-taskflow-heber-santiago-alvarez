@@ -22,6 +22,19 @@ const useStar = (props: IUseStar) => {
     }
   }, [task.completed]);
 
+  const isRecentlyCreated = useMemo(() => {
+    if (!task.localId) return false;
+    const createdAt = parseInt(task.localId.replace('local_', ''));
+    return Date.now() - createdAt < 3000;
+  }, [task.localId]);
+
+  useEffect(() => {
+    if (!isRecentlyCreated) return;
+    setPulseAnimation(1);
+    const timer = setTimeout(() => setPulseAnimation(0), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const { position, color } = useMemo(() => {
     const seed = task.id;
     const x = (Math.sin(seed * 0.123) * 10000) % 1;
