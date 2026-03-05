@@ -1,22 +1,17 @@
-'use client';
-
 import { useMemo } from 'react';
-import { Task } from '@/types';
-import { useTasks } from '@/context/tasks';
-import { FilterType } from '@/types';
+import { useTasks } from '@/context/tasks/TaskContext';
+import { IFilterType } from '@/types';
 
-// Returns the list of tasks filtered according to the current filter value
-// Memoized to avoid unnecessary recalculations on unrelated state changes.
-export function useFilteredTasks(): Task[] {
+export function useFilteredTasks() {
   const { tasks, filter } = useTasks();
 
   return useMemo(() => {
     switch (filter) {
-      case FilterType.COMPLETED:
+      case IFilterType.COMPLETED:
         return tasks.filter((t) => t.completed);
-      case FilterType.PENDING:
+      case IFilterType.PENDING:
         return tasks.filter((t) => !t.completed);
-      case FilterType.ALL:
+      case IFilterType.ALL:
       default:
         return tasks;
     }

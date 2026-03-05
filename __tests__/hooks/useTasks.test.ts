@@ -1,6 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { TaskProvider } from '@/context/tasks';
-import { useTasks } from '@/context/tasks';
+import { useTasks } from '@/context/tasks/TaskContext';
 import React from 'react';
 import { FilterType } from '@/types/FilterType';
 

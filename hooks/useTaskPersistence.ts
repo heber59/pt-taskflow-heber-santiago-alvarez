@@ -1,13 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { Task, PersistedState } from '@/types';
+import { ITask, IPersistedState } from '@/types';
+import { STORAGE_KEYS } from '@/config/hooks/taskFlowKeys';
 
-const STORAGE_KEYS = {
-  tasks: 'taskflow_tasks',
-  localTasks: 'taskflow_localTasks',
-  pendingDeletes: 'taskflow_pendingDeletes',
-} as const;
-
-export function loadPersistedState(): PersistedState {
+export function loadPersistedState(): IPersistedState {
   try {
     return {
       tasks: JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks) ?? '[]'),
@@ -20,8 +15,8 @@ export function loadPersistedState(): PersistedState {
 }
 
 export function useTaskPersistence(
-  tasks: Task[],
-  localTasks: Record<string, Task>,
+  tasks: ITask[],
+  localTasks: Record<string, ITask>,
   pendingDeletes: Set<number>,
   isInitialized: boolean
 ) {

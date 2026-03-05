@@ -1,8 +1,9 @@
-import { Task } from './Task';
+import { ITask } from '@/types';
 
-export interface TasksResponse {
-  todos: Task[];
+interface ITasksResponse {
+  todos: ITask[];
   total: number;
   skip: number;
   limit: number;
 }
+export type { ITasksResponse };

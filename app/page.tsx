@@ -1,15 +1,23 @@
 'use client';
 
-import { TaskProvider } from '@/context/tasks';
 import { TaskForm } from '@components/TaskForm';
 import { FilterBar } from '@components/FilterBar';
-import { ErrorComponent } from '@components/ErrorComponent';
 import { StarBackground } from '@components/StarBackground';
-import { useTasks } from '@/context/tasks';
+
 import { Loader2 } from 'lucide-react';
+import { useFlag } from '@/components/FlagProvider';
+import { useEffect } from 'react';
+import { TaskProvider, useTasks } from '@/context/tasks/TaskContext';
 
 function PageContent() {
-  const { error, retryFetch, loading, isInitialized } = useTasks();
+  const { error, loading, isInitialized } = useTasks();
+  const { addFlag } = useFlag();
+
+  useEffect(() => {
+    if (error) {
+      addFlag(error, 'error');
+    }
+  }, [error]);
 
   if (!isInitialized) {
     return (
@@ -18,7 +26,6 @@ function PageContent() {
       </div>
     );
   }
-
   return (
     <div className="relative h-screen w-screen overflow-hidden text-slate-50 selection:bg-white/20">
       {/* 3D Background Data Visualization - Fixed at Z-Index 0 */}
@@ -43,13 +50,7 @@ function PageContent() {
         </header>
 
         {/* Dynamic Content Area (Errors) */}
-        <main className="flex-1 p-6 relative">
-          {error && (
-            <div className="max-w-md mx-auto pointer-events-auto">
-              <ErrorComponent message={error} onRetry={retryFetch} />
-            </div>
-          )}
-        </main>
+        <main className="flex-1" />
 
         {/* Footer / Status Area */}
         <footer className="p-8 flex justify-between items-end">

@@ -1,7 +1,7 @@
-export interface Task {
+export interface ITask {
   id: number;
   todo: string;
   completed: boolean;
   userId: number;
-  localId?: string; // For tracking newly created tasks
+  localId?: string;
 }

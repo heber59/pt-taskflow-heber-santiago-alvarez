@@ -1,12 +1,12 @@
-import { Task } from './Task';
-import { FilterType } from './FilterType';
+import { ITask } from './Task';
+import { IFilterType } from './FilterType';
 
-export interface TaskContextType {
-  tasks: Task[];
+interface ITaskContextType {
+  tasks: ITask[];
   loading: boolean;
   error: string | null;
-  filter: FilterType;
-  localTasks: Record<string, Task>;
+  filter: IFilterType;
+  localTasks: Record<string, ITask>;
   pendingDeletes: Set<number>;
   isInitialized: boolean;
 
@@ -15,6 +15,7 @@ export interface TaskContextType {
   addTask: (title: string) => void;
   toggleTask: (id: number) => void;
   deleteTask: (id: number) => Promise<void>;
-  setFilter: (filter: FilterType) => void;
+  setFilter: (filter: IFilterType) => void;
   clearError: () => void;
 }
+export type { ITaskContextType };

@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import * as THREE from 'three';
-import { Task } from '@/types';
-import { useTasks } from '@/context/tasks';
+import { ITask } from '@/types';
+import { useTasks } from '@/context/tasks/TaskContext';
 
 export function useStarBackground() {
   const { tasks, filter } = useTasks();
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const scrollRef = useRef(0);
   const smoothScrollRef = useRef(0);

@@ -1,33 +1,50 @@
-// Component Props Types - For all UI component interfaces
+import { IFlag } from './Flag';
+import { ITask } from './Task';
+import React from 'react';
 
-export interface AmbientStarsProps {
-  count?: number;
+interface IAmbientStarsProps {
+  count: number;
 }
 
-export interface StarProps {
-  task: import('./Task').Task;
-  onClick: (task: import('./Task').Task) => void;
+interface IStarProps {
+  task: ITask;
+  onClick: (task: ITask) => void;
   scrollRef: React.RefObject<number>;
 }
 
-export interface TaskGalaxyProps {
-  tasks: import('./Task').Task[];
-  onTaskClick: (task: import('./Task').Task) => void;
+interface ITaskGalaxyProps {
+  tasks: ITask[];
+  onTaskClick: (task: ITask) => void;
   scrollRef: React.RefObject<number>;
 }
 
-export interface ScrollManagerProps {
+interface IScrollManagerProps {
   scrollRef: React.RefObject<number>;
   smoothScrollRef: React.RefObject<number>;
 }
 
-export interface TaskModalProps {
-  task: import('./Task').Task | null;
+interface ITaskModalProps {
+  task: ITask | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export interface ErrorComponentProps {
+interface IErrorComponentProps {
   message: string;
   onRetry: () => void;
 }
+
+interface IFlagItem {
+  flag: IFlag;
+  onRemove: (id: string) => void;
+}
+
+export type {
+  IAmbientStarsProps,
+  IStarProps,
+  ITaskGalaxyProps,
+  IScrollManagerProps,
+  ITaskModalProps,
+  IErrorComponentProps,
+  IFlagItem,
+};
