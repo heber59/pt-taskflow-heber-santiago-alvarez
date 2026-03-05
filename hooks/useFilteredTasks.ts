@@ -1,17 +1,17 @@
 import { useMemo } from 'react';
 import { useTasks } from '@/context/tasks/TaskContext';
-import { FilterType } from '@/types';
+import { IFilterType } from '@/types';
 
 export function useFilteredTasks() {
   const { tasks, filter } = useTasks();
 
   return useMemo(() => {
     switch (filter) {
-      case FilterType.COMPLETED:
+      case IFilterType.COMPLETED:
         return tasks.filter((t) => t.completed);
-      case FilterType.PENDING:
+      case IFilterType.PENDING:
         return tasks.filter((t) => !t.completed);
-      case FilterType.ALL:
+      case IFilterType.ALL:
       default:
         return tasks;
     }

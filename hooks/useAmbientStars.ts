@@ -2,9 +2,9 @@ import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame, RootState } from '@react-three/fiber';
 import { createStarTexture } from '@/utils/createStarTexture';
-import { IuseAmbientStars } from '@/types';
+import { IUseAmbientStars } from '@/types';
 
-const useAmbientStars = (props: IuseAmbientStars) => {
+const useAmbientStars = (props: IUseAmbientStars) => {
   const { count } = props;
   const pointsRef = useRef<THREE.Points>(null);
   const texture = useMemo(() => createStarTexture('gray'), []);

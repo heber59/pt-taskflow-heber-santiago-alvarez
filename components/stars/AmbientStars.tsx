@@ -1,11 +1,12 @@
 'use client';
 
 import * as THREE from 'three';
-import { AmbientStarsProps } from '@/types';
+import { IAmbientStarsProps } from '@/types';
 import { useAmbientStars } from '@/hooks/useAmbientStars';
 
-export function AmbientStars({ count = 1500 }: AmbientStarsProps) {
-  const { pointsRef, texture, positions } = useAmbientStars(count);
+export function AmbientStars(props: IAmbientStarsProps) {
+  const { count } = props;
+  const { pointsRef, texture, positions } = useAmbientStars({ count });
 
   return (
     <points ref={pointsRef}>

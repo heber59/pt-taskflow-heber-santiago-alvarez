@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Task, IPersistedState } from '@/types';
+import { ITask, IPersistedState } from '@/types';
 import { STORAGE_KEYS } from '@/config/hooks/taskFlowKeys';
 
 export function loadPersistedState(): IPersistedState {
@@ -15,8 +15,8 @@ export function loadPersistedState(): IPersistedState {
 }
 
 export function useTaskPersistence(
-  tasks: Task[],
-  localTasks: Record<string, Task>,
+  tasks: ITask[],
+  localTasks: Record<string, ITask>,
   pendingDeletes: Set<number>,
   isInitialized: boolean
 ) {

@@ -2,10 +2,11 @@
 
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { ScrollManagerProps } from '@/types';
+import { IScrollManagerProps } from '@/types';
 
 // Smooths the rawest scroll input for frame-perfect updates
-export function ScrollManager({ scrollRef, smoothScrollRef }: ScrollManagerProps) {
+export function ScrollManager(props: IScrollManagerProps) {
+  const { scrollRef, smoothScrollRef } = props;
   useFrame(() => {
     if (smoothScrollRef.current !== undefined && scrollRef.current !== undefined) {
       smoothScrollRef.current = THREE.MathUtils.lerp(

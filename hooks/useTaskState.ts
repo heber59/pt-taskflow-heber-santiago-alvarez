@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Task, FilterType } from '@/types';
+import { ITask, IFilterType } from '@/types';
 import { loadPersistedState, useTaskPersistence } from '@/hooks/useTaskPersistence';
 import { useTaskApi } from '@/hooks/useTaskApi';
 import { enviroment } from '@/config/enviroment/enviroment';
@@ -8,12 +8,12 @@ import { useFlag } from '@/components/FlagProvider';
 export function useTaskState() {
   const { addFlag } = useFlag();
 
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [localTasks, setLocalTasks] = useState<Record<string, Task>>({});
+  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [localTasks, setLocalTasks] = useState<Record<string, ITask>>({});
   const [pendingDeletes, setPendingDeletes] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterType>(FilterType.ALL);
+  const [filter, setFilter] = useState<IFilterType>(IFilterType.ALL);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const api = useTaskApi({ addFlag });
@@ -52,7 +52,7 @@ export function useTaskState() {
 
   const addTask = useCallback(
     (title: string) => {
-      const newTask: Task = {
+      const newTask: ITask = {
         id: Date.now(),
         todo: title,
         completed: false,

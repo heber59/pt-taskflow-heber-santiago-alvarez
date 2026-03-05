@@ -1,6 +1,6 @@
-import { Flag } from '@/types';
+import { IFlag } from '@/types';
 
 interface IFlagContextValue {
-  addFlag: (message: string, type?: Flag['type']) => void;
+  addFlag: (message: string, type?: IFlag['type']) => void;
 }
 export type { IFlagContextValue };

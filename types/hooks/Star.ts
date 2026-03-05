@@ -1,7 +1,7 @@
-import { Task } from '@/types';
+import { ITask } from '@/types';
 
 interface IUseStar {
-  task: Task;
+  task: ITask;
   scrollRef: React.RefObject<number>;
 }
 export type { IUseStar };

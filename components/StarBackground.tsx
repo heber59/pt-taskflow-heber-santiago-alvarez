@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas } from '@react-three/fiber';
-import { Task } from '@/types';
+import { ITask } from '@/types';
 import { TaskModal } from '@/components/TaskModal';
 import { useStarBackground } from '@/hooks/useStarBackground';
 import { AmbientStars, TaskGalaxy, ScrollManager } from '@/components/stars';
@@ -17,7 +17,7 @@ export function StarBackground() {
     smoothScrollRef,
   } = useStarBackground();
 
-  const handleTaskClick = (task: Task) => {
+  const handleTaskClick = (task: ITask) => {
     setSelectedTask(task);
     setIsModalOpen(true);
   };

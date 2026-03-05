@@ -3,11 +3,12 @@
 import { useFrame, RootState } from '@react-three/fiber';
 import { useRef } from 'react';
 import * as THREE from 'three';
-import { TaskGalaxyProps } from '@/types';
+import { ITaskGalaxyProps } from '@/types';
 import { Star } from '@/components/stars/Star';
 
 // Container for all task stars - rotates based on scroll and time
-export function TaskGalaxy({ tasks, onTaskClick, scrollRef }: TaskGalaxyProps) {
+export function TaskGalaxy(props: ITaskGalaxyProps) {
+  const { tasks, onTaskClick, scrollRef } = props;
   const groupRef = useRef<THREE.Group>(null);
 
   // Rotate galaxy based on scroll input and steady base rotation

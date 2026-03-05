@@ -3,10 +3,12 @@
 import { colors } from '@/config/flag/colors';
 import { dots } from '@/config/flag/dots';
 import { FlagContext } from '@/context/flag';
-import { Flag, useFlagProvider } from '@/hooks/useFlagProvider';
+import { useFlagProvider } from '@/hooks/useFlagProvider';
+import { IFlagItem } from '@/types';
 import { useContext } from 'react';
 
-function FlagItem({ flag, onRemove }: { flag: Flag; onRemove: (id: string) => void }) {
+function FlagItem(props: IFlagItem) {
+  const { flag, onRemove } = props;
   return (
     <div
       className={`

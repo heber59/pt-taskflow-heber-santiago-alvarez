@@ -1,6 +1,6 @@
 'use client';
 
-import { Task, TaskModalProps } from '@/types';
+import { ITask, ITaskModalProps } from '@/types';
 
 import {
   Dialog,
@@ -26,15 +26,16 @@ import { Trash2, CheckCircle2, Circle } from 'lucide-react';
 import { useTaskModal } from '@/hooks/useTaskModal';
 import { useTasks } from '@/context/tasks/TaskContext';
 
-export function TaskModal({ task, open, onOpenChange }: TaskModalProps) {
+export function TaskModal(props: ITaskModalProps) {
+  const { task, onOpenChange, open } = props;
   const { toggleTask, deleteTask } = useTasks();
 
-  const { handleToggle, handleDelete, confirmOpen, setConfirmOpen } = useTaskModal(
-    task!,
+  const { handleToggle, handleDelete, confirmOpen, setConfirmOpen } = useTaskModal({
+    task,
     toggleTask,
     deleteTask,
-    onOpenChange
-  );
+    onOpenChange,
+  });
 
   if (!task) return null;
 

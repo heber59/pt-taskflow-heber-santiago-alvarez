@@ -3,9 +3,10 @@
 import { AlertCircle, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ErrorComponentProps } from '@/types';
+import { IErrorComponentProps } from '@/types';
 
-export function ErrorComponent({ message, onRetry }: ErrorComponentProps) {
+export function ErrorComponent(props: IErrorComponentProps) {
+  const { message, onRetry } = props;
   return (
     <div className="w-full max-w-2xl mx-auto p-6">
       <Alert variant="destructive" className="bg-red-50 border-red-200">

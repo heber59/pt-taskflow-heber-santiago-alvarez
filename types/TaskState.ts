@@ -1,6 +1,8 @@
-import { Task } from './Task';
+import { ITask } from '@/types';
 
-export interface TaskState extends Task {
+interface ITaskState extends ITask {
   isLoading?: boolean;
   isSynced?: boolean;
 }
+
+export type { ITaskState };

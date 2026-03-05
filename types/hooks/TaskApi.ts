@@ -1,5 +1,5 @@
-import { Flag } from '@/types';
+import { IFlag } from '@/types';
 interface IUseTaskApi {
-  addFlag: (message: string, type?: Flag['type']) => void;
+  addFlag: (message: string, type?: IFlag['type']) => void;
 }
 export type { IUseTaskApi };

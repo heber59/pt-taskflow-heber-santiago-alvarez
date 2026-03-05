@@ -2,10 +2,11 @@
 
 import * as THREE from 'three';
 import { Html } from '@react-three/drei';
-import { StarProps } from '@/types';
+import { IStarProps } from '@/types';
 import { useStar } from '@/hooks/useStar';
 
-export function Star({ task, onClick, scrollRef }: StarProps) {
+export function Star(props: IStarProps) {
+  const { task, onClick, scrollRef } = props;
   const { spriteRef, hovered, texture, position, color, handlePointerOver, handlePointerOut } =
     useStar({ task, scrollRef });
 

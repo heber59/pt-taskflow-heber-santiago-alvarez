@@ -1,8 +1,8 @@
-import { Task } from '@/types';
+import { ITask } from '@/types';
 
 interface IPersistedState {
-  tasks: Task[];
-  localTasks: Record<string, Task>;
+  tasks: ITask[];
+  localTasks: Record<string, ITask>;
   pendingDeletes: number[];
 }
 export type { IPersistedState };

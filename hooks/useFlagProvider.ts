@@ -1,9 +1,9 @@
-import { Flag } from '@/types';
+import { IFlag } from '@/types';
 
 import { useState, useCallback, useRef } from 'react';
 
 const useFlagProvider = () => {
-  const [flags, setFlags] = useState<Flag[]>([]);
+  const [flags, setFlags] = useState<IFlag[]>([]);
   const timers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   const removeFlag = useCallback((id: string) => {
@@ -12,7 +12,7 @@ const useFlagProvider = () => {
   }, []);
 
   const addFlag = useCallback(
-    (message: string, type: Flag['type'] = 'error') => {
+    (message: string, type: IFlag['type'] = 'error') => {
       const id = crypto.randomUUID();
       setFlags((prev) => [...prev, { id, message, type }]);
 
